@@ -6,9 +6,16 @@
     <title>Infinity</title>
 </head>
 <body>
+    <h1>Carregar Arquivo OBJ</h1>
+    <input type="file" id="fileInput" accept=".obj">
+    <pre id="output"></pre>
     <div style="display: flex; flex-direction: row;justify-content: center; padding-top: 6%;"> 
         <canvas id="canvas-infinity" style="border: 1px solid black; " ></canvas>
     </div>
+    <script src="src/engine/infinityMesh.js"></script>
+    <script src="src/engine/infinityMatriz.js"></script>
+    <script src="src/engine/infinityMath.js"></script>
+    <script src="src/engine/infinityTriangle.js"></script>
     <script src="src/engine/infinityVector.js"></script>
     <script src="src/engine/infinityCanvas.js"></script>
     <script src="src/engine/infnityCamera.js"></script>    

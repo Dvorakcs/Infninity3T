@@ -1,172 +1,128 @@
 class infinityEngine{
     constructor(props){
-        this.infinityCanvas = new infinityCanvas({
-            canvas:props.canvas
+        this.canvas = new infinityCanvas({
+            canvas:document.getElementById('canvas-infinity')
         })
         this.camera = new inifnityCamera({
-            position: new infinityVector(0,0,4)
+
         })
-        this.angle = {
-            x:0,
-            y:0
-        }
-       this.controll = new infinityControl();
-       this.vector = new infinityVector(50,50,4)
-       this.vectorTwo = new infinityVector(50,60,4)
-       this.vectorThree = new infinityVector(60,60,4)
-       this.vectorFour = new infinityVector(60,50,4)
-       this.vectorFive = new infinityVector(50,50,5)
-       this.vectorSix = new infinityVector(50,60,5)
-       this.vectorSeven = new infinityVector(60,60,5)
-       this.vectorEight = new infinityVector(60,50,5)
-    }
-
-    rotateX(vec,angle){
-        return{
-            x:vec.x * Math.cos(angle) - vec.z * Math.sin(angle),
-            y:vec.y,
-            z:vec.x * Math.sin(angle) + vec.z * Math.cos(angle)
-        
-        }
+        this.controle = new infinityControl()
+        this.matrix = new infinityMatrix()
+        this.rotateX = 0
+        this.rotateY = 0
+        this.rotateZ = 0
        
-    }
-    rotateY(vec,angle){
-        return{
-            x:vec.x,
-            y:vec.y * Math.cos(angle) - vec.z * Math.sin(angle),
-            z:vec.y * Math.sin(angle) + vec.z * Math.cos(angle)
-        
-        } 
-    }
+        this.velocityX = 0
+        this.velocityY = 0
+        this.velocityZ = 0
 
-    projecao3Dto2D(vector,camera){
         
-        const centerX = this.infinityCanvas.canvas.width/2
-        const centerY = this.infinityCanvas.canvas.width/2
-
-        //const projectedCenter = {
-         //  x: centerX + vector.x,
-          //  y:centerY + vector.y
-        //}
-        const projectionCamera = {
-            x: vector.x - camera.position.x ,
-            y: vector.y - camera.position.y ,
-            z: vector.z - camera.position.z,
-        }
-       
-        return {
-            x:projectionCamera.x/projectionCamera.z * camera.focal,
-            y:projectionCamera.y/projectionCamera.z * camera.focal,
-            z:projectionCamera.z
-        }
+        this.mesh = 
+        this.array = [0,0,0]
+        
     }
+    
     start(event){
-        
+
+       
         this.update(event)
     }
     update(event){
+      this.canvas.context.clearRect(0,0,720,440)
+        if(this.controle.keys.w) this.rotateY += 0.01
+        if(this.controle.keys.s) this.rotateY -= 0.01
+        if(this.controle.keys.d) this.rotateX += 0.01
+        if(this.controle.keys.a) this.rotateX -= 0.01
+        if(this.controle.keys.e) this.rotateZ += 0.01
+        if(this.controle.keys.q) this.rotateZ -= 0.01
+        
        
-        if(this.controll.keys.w) this.camera.position.y += 0.1
-        if(this.controll.keys.s) this.camera.position.y -= 0.1
 
-        if(this.controll.keys.d) this.camera.position.x -= 0.1
-        if(this.controll.keys.a) this.camera.position.x += 0.1
+       this.mesh.infinityTriangles.forEach(triangle => {
 
-        this.camera.position.z = this.controll.valueY;
-
-        if(this.controll.keys.e) {
-            this.angle.x += 0.001
-            this.vector = this.rotateX(this.vector,this.angle.x)
-            this.vectorTwo = this.rotateX(this.vectorTwo,this.angle.x)
-            this.vectorThree = this.rotateX(this.vectorThree,this.angle.x)
-           this.vectorFour = this.rotateX(this.vectorFour,this.angle.x)
-            this.vectorFive = this.rotateX(this.vectorFive,this.angle.x)
-            this.vectorSix = this.rotateX(this.vectorSix,this.angle.x)
-           this.vectorSeven = this.rotateX(this.vectorSeven,this.angle.x)
-           this.vectorEight = this.rotateX(this.vectorEight,this.angle.x)
-            //this.camera.position = this.rotateX(this.camera.position,this.angle.x)
-        }
-        if(this.controll.keys.q) {
-            this.angle.x -= 0.001
-            this.vector = this.rotateX(this.vector,this.angle.x)
-            this.vectorTwo = this.rotateX(this.vectorTwo,this.angle.x)
-            this.vectorThree = this.rotateX(this.vectorThree,this.angle.x)
-           this.vectorFour = this.rotateX(this.vectorFour,this.angle.x)
-           this.vectorFive = this.rotateX(this.vectorFive,this.angle.x)
-           this.vectorSix = this.rotateX(this.vectorSix,this.angle.x)
-           this.vectorSeven = this.rotateX(this.vectorSeven,this.angle.x)
-            this.vectorEight = this.rotateX(this.vectorEight,this.angle.x)
-           // this.camera.position = this.rotateX(this.camera.position,this.angle.x)
+            if(this.controle.keys.t) {
+                triangle.vectorA.y -= 0.01
+                triangle.vectorB.y -= 0.01
+                triangle.vectorC.y -= 0.01
+            }
+            if(this.controle.keys.g) {
+                triangle.vectorA.y += 0.01
+                triangle.vectorB.y += 0.01
+                triangle.vectorC.y += 0.01
+            }
             
-        }
-        if(this.controll.keys.x) {
-            this.angle.y -= 0.001
-            this.vector = this.rotateY(this.vector,this.angle.y)
-            this.vectorTwo = this.rotateY(this.vectorTwo,this.angle.y)
-            this.vectorThree = this.rotateY(this.vectorThree,this.angle.y)
-            this.vectorFour = this.rotateY(this.vectorFour,this.angle.y)
-            this.vectorFive = this.rotateY(this.vectorFive,this.angle.y)
-            this.vectorSix = this.rotateY(this.vectorSix,this.angle.y)
-            this.vectorSeven = this.rotateY(this.vectorSeven,this.angle.y)
-            this.vectorEight = this.rotateY(this.vectorEight,this.angle.y)
-        }
-        if(this.controll.keys.z) {
-            this.angle.y += 0.0001
-            this.vector = this.rotateY(this.vector,this.angle.y)
-            this.vectorTwo = this.rotateY(this.vectorTwo,this.angle.y)
-            this.vectorThree = this.rotateY(this.vectorThree,this.angle.y)
-            this.vectorFour = this.rotateY(this.vectorFour,this.angle.y)
-            this.vectorFive = this.rotateY(this.vectorFive,this.angle.y)
-            this.vectorSix = this.rotateY(this.vectorSix,this.angle.y)
-            this.vectorSeven = this.rotateY(this.vectorSeven,this.angle.y)
-            this.vectorEight = this.rotateY(this.vectorEight,this.angle.y)
-        }
-       const vector = this.projecao3Dto2D(this.vector,this.camera,this.controll.valueY)
-       const vector2 = this.projecao3Dto2D(this.vectorTwo,this.camera,this.controll.valueY)
-       const vector3 = this.projecao3Dto2D(this.vectorThree,this.camera,this.controll.valueY)
-       const vector4 = this.projecao3Dto2D(this.vectorFour,this.camera,this.controll.valueY)
-       const vector5 = this.projecao3Dto2D(this.vectorFive,this.camera,this.controll.valueY)
-       const vector6 = this.projecao3Dto2D(this.vectorSix,this.camera,this.controll.valueY)
-       const vector7 = this.projecao3Dto2D(this.vectorSeven,this.camera,this.controll.valueY)
-       const vector8 = this.projecao3Dto2D(this.vectorEight,this.camera,this.controll.valueY)
+            if(this.controle.keys.h) {
+                triangle.vectorA.x += 0.01
+                triangle.vectorB.x += 0.01
+                triangle.vectorC.x += 0.01
+            }
+            if(this.controle.keys.f) {
+                triangle.vectorA.x -= 0.01
+                triangle.vectorB.x -= 0.01
+                triangle.vectorC.x -= 0.01
+            }
 
+           if(this.controle.keys.z){
+                this.camera.fov += 0.001
+           }
+           if(this.controle.keys.x){
+            this.camera.fov -= 0.001
+            }
+            let triangleRotateX = new infinityTriangle(new infinityVector(0,0,0),new infinityVector(0,0,0),new infinityVector(0,0,0))
+            
+            triangleRotateX.vectorA = this.matrix.mutiplicacaoMatrixVetor(triangle.vectorA,this.matrix.rotateX(this.rotateX))
+            triangleRotateX.vectorB = this.matrix.mutiplicacaoMatrixVetor(triangle.vectorB,this.matrix.rotateX(this.rotateX))
+            triangleRotateX.vectorC = this.matrix.mutiplicacaoMatrixVetor(triangle.vectorC,this.matrix.rotateX(this.rotateX))
+
+            let triangleRotateY = new infinityTriangle(new infinityVector(0,0,0),new infinityVector(0,0,0),new infinityVector(0,0,0))
+
+            triangleRotateY.vectorA = this.matrix.mutiplicacaoMatrixVetor(triangleRotateX.vectorA,this.matrix.rotateY(this.rotateY))
+            triangleRotateY.vectorB = this.matrix.mutiplicacaoMatrixVetor(triangleRotateX.vectorB,this.matrix.rotateY(this.rotateY))
+            triangleRotateY.vectorC = this.matrix.mutiplicacaoMatrixVetor(triangleRotateX.vectorC,this.matrix.rotateY(this.rotateY))
+
+            let triangleRotateZ = new infinityTriangle(new infinityVector(0,0,0),new infinityVector(0,0,0),new infinityVector(0,0,0))
+
+            triangleRotateZ.vectorA = this.matrix.mutiplicacaoMatrixVetor(triangleRotateY.vectorA,this.matrix.rotateZ(this.rotateZ))
+            triangleRotateZ.vectorB = this.matrix.mutiplicacaoMatrixVetor(triangleRotateY.vectorB,this.matrix.rotateZ(this.rotateZ))
+            triangleRotateZ.vectorC = this.matrix.mutiplicacaoMatrixVetor(triangleRotateY.vectorC,this.matrix.rotateZ(this.rotateZ))
+
+            let triangleScale = new infinityTriangle(new infinityVector(0,0,0),new infinityVector(0,0,0),new infinityVector(0,0,0))
+            
+            triangleScale.vectorA = this.matrix.mutiplicacaoMatrixVetor(triangleRotateZ.vectorA,this.matrix.scale(80))
+            triangleScale.vectorB = this.matrix.mutiplicacaoMatrixVetor(triangleRotateZ.vectorB,this.matrix.scale(80))
+            triangleScale.vectorC = this.matrix.mutiplicacaoMatrixVetor(triangleRotateZ.vectorC,this.matrix.scale(80))
+           
+            triangleScale.vectorA.z += this.controle.delta.y
+            triangleScale.vectorB.z += this.controle.delta.y
+            triangleScale.vectorC.z += this.controle.delta.y
+            
+           
+            let triangleProjected = new infinityTriangle(new infinityVector(0,0,0),new infinityVector(0,0,0),new infinityVector(0,0,0))
+           
+            triangleProjected.vectorA = this.matrix.mutiplicacaoMatrixVetor(triangleScale.vectorA,this.camera.matrizCamera())
+            triangleProjected.vectorB = this.matrix.mutiplicacaoMatrixVetor(triangleScale.vectorB,this.camera.matrizCamera())
+            triangleProjected.vectorC = this.matrix.mutiplicacaoMatrixVetor(triangleScale.vectorC,this.camera.matrizCamera())
+           
+            triangleProjected.vectorA.x/triangleProjected.vectorA.z * this.camera.zNear
+            triangleProjected.vectorA.y/triangleProjected.vectorA.z * this.camera.zNear
+            triangleProjected.vectorB.x/triangleProjected.vectorB.z * this.camera.zNear
+            triangleProjected.vectorB.y/triangleProjected.vectorB.z * this.camera.zNear
+            triangleProjected.vectorC.x/triangleProjected.vectorC.z * this.camera.zNear
+            triangleProjected.vectorC.y/triangleProjected.vectorC.z * this.camera.zNear
+           
+            triangleProjected.vectorA.x += this.canvas.canvas.width/2
+            triangleProjected.vectorA.y += this.canvas.canvas.height/2
+            triangleProjected.vectorB.x += this.canvas.canvas.width/2
+            triangleProjected.vectorB.y += this.canvas.canvas.height/2
+            triangleProjected.vectorC.x += this.canvas.canvas.width/2
+            triangleProjected.vectorC.y += this.canvas.canvas.height/2
+
+            triangleProjected.draw(this.canvas.context)
+       });
        
-       console.log(vector)
-       this.draw({
-        obj:[vector,vector2,vector3,vector4,vector5,vector6,vector7,vector8]
-       }) 
-
        requestAnimationFrame(() => this.update(event))
     }
-    draw(event){
-        this.infinityCanvas.context.clearRect(0,0,360 *2,220 *2)
-        for (let index = 0; index < event.obj.length; index++) {
-            const element = event.obj[index];
-          
-            this.infinityCanvas.context.beginPath();
-            this.infinityCanvas.context.arc(element.x, element.y, 2, 0, 2 * Math.PI, false);
-            //context.fillStyle = this.cor ?? 'black';
-            this.infinityCanvas.context.fill();
-            this.infinityCanvas.context.closePath();
-        }
-
-        const squad  = event.obj
-        this.infinityCanvas.context.beginPath()
-        this.infinityCanvas.context.moveTo(squad[0].x,squad[0].y)
-        this.infinityCanvas.context.lineTo(squad[1].x,squad[1].y)
-        this.infinityCanvas.context.lineTo(squad[2].x,squad[2].y)
-        this.infinityCanvas.context.lineTo(squad[3].x,squad[3].y)
-        this.infinityCanvas.context.lineTo(squad[0].x,squad[0].y)
-        this.infinityCanvas.context.moveTo(squad[4].x,squad[4].y)
-        this.infinityCanvas.context.lineTo(squad[5].x,squad[5].y)
-        this.infinityCanvas.context.lineTo(squad[6].x,squad[6].y)
-        this.infinityCanvas.context.lineTo(squad[7].x,squad[7].y)
-        this.infinityCanvas.context.lineTo(squad[4].x,squad[4].y)
-        this.infinityCanvas.context.lineTo(squad[0].x,squad[0].y)
-        this.infinityCanvas.context.stroke()
-       // console.log(squad)
-        
-    }
+    
     stop(event){
         
     }

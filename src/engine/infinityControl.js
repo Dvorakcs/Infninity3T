@@ -18,10 +18,10 @@ class infinityControl{
     setScroll(event){
         if(event.deltaY > 0 ){
             this.delta.y = +1
-        }else{
+        }else if(event.deltaY < 0){
             this.delta.y = -1
         }
-       this.valueY += this.delta.y
-       console.log(this.valueY)
+       
+       console.log(this.delta.y)
     }
 }
