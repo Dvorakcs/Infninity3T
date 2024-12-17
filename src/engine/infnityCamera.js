@@ -1,6 +1,6 @@
 class inifnityCamera{
     constructor(props){
-       this.position = props.position ?? new infinityVector(0,0,0)
+       this.position = props.position ?? new infinityVector(1,1,1)
        this.fov = 90
        this.aspect = props.aspect ?? 720/440
        this.zNear = 0.1

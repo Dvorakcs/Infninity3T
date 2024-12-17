@@ -77,12 +77,21 @@ class infinityMatrix{
         let somatoria = 0;
 
         for (let i = 0; i < A.length; i++) {
-            for (let j = 0; j <= 2; j++) {
+            for (let j = 0; j <= 3; j++) {
                 
                 somatoria += A[i][j] * vectorArray[j]
             }
             R[i] = somatoria
             somatoria = 0
+        }
+        
+        if (R[3] != 0.0)
+        {
+            
+                R[0] /= R[3] 
+                R[1] /= R[3] 
+                R[2] /= R[3] 
+
         }
 
         return this.mapArrayToVector(R);

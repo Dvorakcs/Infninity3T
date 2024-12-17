@@ -14,9 +14,9 @@ class infinityTriangle{
         context.lineTo(this.vectorA.x,this.vectorA.y)
         
         context.fillStyle = this.color;
-        console.log(this.color)
+        
         context.closePath();
-        context.fill();
+        context.stroke();
     }
     
 }
