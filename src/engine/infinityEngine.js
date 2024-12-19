@@ -18,25 +18,78 @@ class infinityEngine{
 
         
         this.mesh = new infinityMesh(
-            new infinityTriangle(new infinityVector(0,0,1,0),new infinityVector(0,1,1,0),new infinityVector(1,1,1,0)),
-            new infinityTriangle(new infinityVector(0,0,1,0),new infinityVector(1,1,1,0),new infinityVector(1,0,1,0)),
-
-            new infinityTriangle(new infinityVector(0,0,0,0),new infinityVector(0,1,0,0),new infinityVector(0,1,1,0)),
-            new infinityTriangle(new infinityVector(0,0,0,0),new infinityVector(0,1,1,0),new infinityVector(0,0,1,0)),
-            
-            new infinityTriangle(new infinityVector(1,0,0,0),new infinityVector(1,1,0,0),new infinityVector(0,1,0,0)),
-            new infinityTriangle(new infinityVector(1,0,0,0),new infinityVector(0,1,0,0),new infinityVector(0,0,0,0)),
-           
-            new infinityTriangle(new infinityVector(1,0,1,0),new infinityVector(1,1,1,0),new infinityVector(1,1,0,0)),
-            new infinityTriangle(new infinityVector(1,0,1,0),new infinityVector(1,1,0,0),new infinityVector(1,0,0,0)),
-
-            new infinityTriangle(new infinityVector(0,1,1,0),new infinityVector(0,1,0,0),new infinityVector(1,1,0,0)),
-            new infinityTriangle(new infinityVector(0,1,1,0),new infinityVector(1,1,0,0),new infinityVector(1,1,1,0)),
-            
-            new infinityTriangle(new infinityVector(0,0,1,0),new infinityVector(0,0,0,0),new infinityVector(1,0,0,0)),
-            new infinityTriangle(new infinityVector(0,0,1,0),new infinityVector(1,0,0,0),new infinityVector(1,0,1,0)),
-            
-        )
+            // SOUTH
+            new infinityTriangle(
+                new infinityVector(0.0, 0.0, 0.0, 0.0),
+                new infinityVector(0.0, 1.0, 0.0, 0.0),
+                new infinityVector(1.0, 1.0, 0.0, 0.0)
+            ),
+            new infinityTriangle(
+                new infinityVector(0.0, 0.0, 0.0, 0.0),
+                new infinityVector(1.0, 1.0, 0.0, 0.0),
+                new infinityVector(1.0, 0.0, 0.0, 0.0)
+            ),
+        
+            // EAST
+            new infinityTriangle(
+                new infinityVector(1.0, 0.0, 0.0, 0.0),
+                new infinityVector(1.0, 1.0, 0.0, 0.0),
+                new infinityVector(1.0, 1.0, 1.0, 0.0)
+            ),
+            new infinityTriangle(
+                new infinityVector(1.0, 0.0, 0.0, 0.0),
+                new infinityVector(1.0, 1.0, 1.0, 0.0),
+                new infinityVector(1.0, 0.0, 1.0, 0.0)
+            ),
+        
+            // NORTH
+            new infinityTriangle(
+                new infinityVector(1.0, 0.0, 1.0, 0.0),
+                new infinityVector(1.0, 1.0, 1.0, 0.0),
+                new infinityVector(0.0, 1.0, 1.0, 0.0)
+            ),
+            new infinityTriangle(
+                new infinityVector(1.0, 0.0, 1.0, 0.0),
+                new infinityVector(0.0, 1.0, 1.0, 0.0),
+                new infinityVector(0.0, 0.0, 1.0, 0.0)
+            ),
+        
+            // WEST
+            new infinityTriangle(
+                new infinityVector(0.0, 0.0, 1.0, 0.0),
+                new infinityVector(0.0, 1.0, 1.0, 0.0),
+                new infinityVector(0.0, 1.0, 0.0, 0.0)
+            ),
+            new infinityTriangle(
+                new infinityVector(0.0, 0.0, 1.0, 0.0),
+                new infinityVector(0.0, 1.0, 0.0, 0.0),
+                new infinityVector(0.0, 0.0, 0.0, 0.0)
+            ),
+        
+            // TOP
+            new infinityTriangle(
+                new infinityVector(0.0, 1.0, 0.0, 0.0),
+                new infinityVector(0.0, 1.0, 1.0, 0.0),
+                new infinityVector(1.0, 1.0, 1.0, 0.0)
+            ),
+            new infinityTriangle(
+                new infinityVector(0.0, 1.0, 0.0, 0.0),
+                new infinityVector(1.0, 1.0, 1.0, 0.0),
+                new infinityVector(1.0, 1.0, 0.0, 0.0)
+            ),
+        
+            // BOTTOM
+            new infinityTriangle(
+                new infinityVector(1.0, 0.0, 1.0, 0.0),
+                new infinityVector(0.0, 0.0, 1.0, 0.0),
+                new infinityVector(0.0, 0.0, 0.0, 0.0)
+            ),
+            new infinityTriangle(
+                new infinityVector(1.0, 0.0, 1.0, 0.0),
+                new infinityVector(0.0, 0.0, 0.0, 0.0),
+                new infinityVector(1.0, 0.0, 0.0, 0.0)
+            )
+        );
         this.array = [0,0,0]
         
     }
@@ -74,12 +127,12 @@ class infinityEngine{
             })
             .then(data => {
                 
-               //this.mesh =this.parseObjToInfinityMesh(data) ;
-               
+               this.mesh = this.parseObjToInfinityMesh(data) ;
+               this.update(event)
             })
             .catch(error => console.error('Erro:', error));
 
-            this.update(event)
+            
     }
     update(event){
       this.canvas.context.clearRect(0,0,720,440)
@@ -92,8 +145,11 @@ class infinityEngine{
         
        if(this.mesh == null) return
 
-       this.mesh.infinityTriangles.forEach(triangle => {
-        
+       for (let triangleINDEX = 2; triangleINDEX <  this.mesh.length; ) {
+       
+        let triangle = new infinityTriangle(this.mesh[triangleINDEX - 2],this.mesh[triangleINDEX - 1],this.mesh[triangleINDEX])
+      
+        triangleINDEX += 3
        
 
         if(this.controle.keys.t) {
@@ -124,6 +180,7 @@ class infinityEngine{
        if(this.controle.keys.x){
         this.camera.fov -= 0.001
         }
+
         let triangleRotateX = new infinityTriangle(new infinityVector(0,0,0),new infinityVector(0,0,0),new infinityVector(0,0,0))
         
         triangleRotateX.vectorA = this.matrix.mutiplicacaoMatrixVetor(triangle.vectorA,this.matrix.rotateX(this.rotateX))
@@ -148,7 +205,35 @@ class infinityEngine{
         triangleScale.vectorB = this.matrix.mutiplicacaoMatrixVetor(triangleRotateZ.vectorB,this.matrix.scale(80))
         triangleScale.vectorC = this.matrix.mutiplicacaoMatrixVetor(triangleRotateZ.vectorC,this.matrix.scale(80))
           
-        let triangleProjected = new infinityTriangle(new infinityVector(0,0,0),new infinityVector(0,0,0),new infinityVector(0,0,0))
+        // Use Cross-Product to get surface normal
+			let normal = new infinityVector(0,0,0)
+			let line1 = new infinityVector(0,0,0)
+			let line2 = new infinityVector(0,0,0)
+
+			line1.x = triangleScale.vectorB.x - triangleScale.vectorA.x;
+			line1.y = triangleScale.vectorB.y - triangleScale.vectorA.y;
+			line1.z = triangleScale.vectorB.z - triangleScale.vectorA.z;
+
+			line2.x = triangleScale.vectorC.x - triangleScale.vectorA.x;
+			line2.y = triangleScale.vectorC.y - triangleScale.vectorA.y;
+			line2.z = triangleScale.vectorC.z - triangleScale.vectorA.z;
+
+			normal.x = line1.y * line2.z - line1.z * line2.y;
+			normal.y = line1.z * line2.x - line1.x * line2.z;
+			normal.z = line1.x * line2.y - line1.y * line2.x;
+
+			// It's normally normal to normalise the normal
+			let l = Math.sqrt(normal.x*normal.x + normal.y*normal.y + normal.z*normal.z);
+
+			normal.x /= l; 
+            normal.y /= l; 
+            normal.z /= l;
+
+            if(normal.x * (triangleScale.vectorA.x - this.camera.position.x) + 
+               normal.y * (triangleScale.vectorA.y - this.camera.position.y) +
+                normal.z * (triangleScale.vectorA.z - this.camera.position.z) < 0
+            ){
+            let triangleProjected = new infinityTriangle(new infinityVector(0,0,0),new infinityVector(0,0,0),new infinityVector(0,0,0))
        
        
             triangleProjected.vectorA = this.matrix.mutiplicacaoMatrixVetor(triangleScale.vectorA,this.camera.matrizCamera())
@@ -171,8 +256,9 @@ class infinityEngine{
 
             triangleProjected.draw(this.canvas.context)
         
+            }
             
-        });
+        };
 
             
        
