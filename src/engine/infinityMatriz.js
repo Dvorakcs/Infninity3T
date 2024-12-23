@@ -1,6 +1,6 @@
-class infinityMatrix{
+class infinityMatriz{
     constructor(){
-        this.matrix = [
+        this.matriz = [
             [0,0,0,0],
             [0,0,0,0],
             [0,0,0,0],
@@ -20,7 +20,7 @@ class infinityMatrix{
         const array = [[1,0,0,0],
                       [0,Math.cos(angle), -Math.sin(angle),0],
                       [0,Math.sin(angle), Math.cos(angle),0],    
-                      [0,0, 0,0]]
+                      [0,0, 0,0]]   
        return array                
     }
     rotateY(angle){
@@ -61,23 +61,23 @@ class infinityMatrix{
             array[1] = vector.y
         if(vector.z == undefined) vector.z = 0
             array[2] = vector.z 
-        if(vector.w == undefined) vector.w = 0
+        if(vector.w == undefined || vector.w == 0) vector.w = 1
             array[3] = vector.w 
         
 
         return array;
     }
-    mutiplicacaoMatrixVetor(vector, matrix = null){
+    mutiplicacaoMatrizVetor(vector, matriz = null){
 
         if(vector == null) return;
 
         let R = [0,0,0,0]
-        let A = matrix == null ? this.matrix : matrix
+        let A = matriz == null ? this.matriz : matriz
         let vectorArray = this.mapVectorToArray(vector)
         let somatoria = 0;
 
         for (let i = 0; i < A.length; i++) {
-            for (let j = 0; j <= 3; j++) {
+            for (let j = 0; j < 4; j++) {
                 
                 somatoria += A[i][j] * vectorArray[j]
             }
@@ -85,15 +85,12 @@ class infinityMatrix{
             somatoria = 0
         }
         
-        if (R[3] != 0.0)
-        {
-            
-                R[0] /= R[3] 
-                R[1] /= R[3] 
-                R[2] /= R[3] 
-
+        if(R[3] !=0 ){
+            R[0] /= R[3]
+            R[1] /= R[3]
+            R[2] /= R[3]
         }
-
+        
         return this.mapArrayToVector(R);
     }
 }

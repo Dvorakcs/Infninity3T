@@ -7,7 +7,7 @@ class infinityEngine{
 
         })
         this.controle = new infinityControl()
-        this.matrix = new infinityMatrix()
+        this.matriz = new infinityMatriz()
         this.rotateX = 0
         this.rotateY = 0
         this.rotateZ = 0
@@ -15,7 +15,7 @@ class infinityEngine{
         this.velocityX = 0
         this.velocityY = 0
         this.velocityZ = 0
-
+        this.position = new infinityVector(1,5,0)
         
         this.mesh = new infinityMesh(
             // SOUTH
@@ -121,17 +121,17 @@ class infinityEngine{
     start(event){
         const filePath = 'src/obj/utah.txt'
         fetch(filePath)
-            .then(response => {
-                if (!response.ok) throw new Error('Erro ao carregar o arquivo');
-                return response.text();
-            })
-            .then(data => {
-                
-               this.mesh = this.parseObjToInfinityMesh(data) ;
-               this.update(event)
-            })
-            .catch(error => console.error('Erro:', error));
-
+        .then(response => {
+            if (!response.ok) throw new Error('Erro ao carregar o arquivo');
+            return response.text();
+        })
+        .then(data => {
+            
+           this.mesh = this.parseObjToInfinityMesh(data);
+           
+           this.update(event)
+        })
+        .catch(error => console.error('Erro:', error));
             
     }
     update(event){
@@ -142,70 +142,68 @@ class infinityEngine{
         if(this.controle.keys.a) this.rotateX -= 0.01
         if(this.controle.keys.e) this.rotateZ += 0.01
         if(this.controle.keys.q) this.rotateZ -= 0.01
-        
+        if(this.controle.keys.t) this.position.y += 1.1
+        if(this.controle.keys.g) this.position.y -= 1.1
+        if(this.controle.keys.h) this.position.x += 1.1
+        if(this.controle.keys.f) this.position.x -= 1.1
+        if(this.controle.keys.x) this.position.z += 1.1
+        if(this.controle.keys.z) {
+          //  this.position.z -= 0.1 
+           // this.position.y -= 0.1 
+            this.camera.fov += 0.01
+        }
+        if(this.controle.keys.x) {
+          // this.position.z  += 0.1 
+          // this.position.y  += 0.1 
+            this.camera.fov -= 0.01
+        }
        if(this.mesh == null) return
 
-       for (let triangleINDEX = 2; triangleINDEX <  this.mesh.length; ) {
-       
-        let triangle = new infinityTriangle(this.mesh[triangleINDEX - 2],this.mesh[triangleINDEX - 1],this.mesh[triangleINDEX])
-      
-        triangleINDEX += 3
-       
-
-        if(this.controle.keys.t) {
-            triangle.vectorA.y -= 0.01
-            triangle.vectorB.y -= 0.01
-            triangle.vectorC.y -= 0.01
-        }
-        if(this.controle.keys.g) {
-            triangle.vectorA.y += 0.01
-            triangle.vectorB.y += 0.01
-            triangle.vectorC.y += 0.01
-        }
+      //this.mesh.infinityTriangles.forEach(triangle => {
+        for (let triangleINDEX = 2; triangleINDEX < this.mesh.length;) {
+            
+            
         
-        if(this.controle.keys.h) {
-            triangle.vectorA.x += 0.01
-            triangle.vectorB.x += 0.01
-            triangle.vectorC.x += 0.01
-        }
-        if(this.controle.keys.f) {
-            triangle.vectorA.x -= 0.01
-            triangle.vectorB.x -= 0.01
-            triangle.vectorC.x -= 0.01
-        }
+      
+        
+      
+        
+        
+        let triangleTranslated = new infinityTriangle(new infinityVector(0,0,0),new infinityVector(0,0,0),new infinityVector(0,0,0))
+        let triangle = new infinityTriangle(this.mesh[triangleINDEX - 2],this.mesh[triangleINDEX - 1],this.mesh[triangleINDEX])
+        triangleINDEX += 3
 
-       if(this.controle.keys.z){
-            this.camera.fov += 0.001
-       }
-       if(this.controle.keys.x){
-        this.camera.fov -= 0.001
-        }
 
+        triangleTranslated.vectorA = this.matriz.mutiplicacaoMatrizVetor(triangle.vectorA,this.matriz.translacao(new infinityVector(this.position.x,this.position.y,this.position.z)))
+        
+        triangleTranslated.vectorB = this.matriz.mutiplicacaoMatrizVetor(triangle.vectorB,this.matriz.translacao(new infinityVector(this.position.x,this.position.y,this.position.z)))
+        triangleTranslated.vectorC = this.matriz.mutiplicacaoMatrizVetor(triangle.vectorC,this.matriz.translacao(new infinityVector(this.position.x,this.position.y,this.position.z)))
+            
         let triangleRotateX = new infinityTriangle(new infinityVector(0,0,0),new infinityVector(0,0,0),new infinityVector(0,0,0))
         
-        triangleRotateX.vectorA = this.matrix.mutiplicacaoMatrixVetor(triangle.vectorA,this.matrix.rotateX(this.rotateX))
-        triangleRotateX.vectorB = this.matrix.mutiplicacaoMatrixVetor(triangle.vectorB,this.matrix.rotateX(this.rotateX))
-        triangleRotateX.vectorC = this.matrix.mutiplicacaoMatrixVetor(triangle.vectorC,this.matrix.rotateX(this.rotateX))
+        triangleRotateX.vectorA = this.matriz.mutiplicacaoMatrizVetor(triangleTranslated.vectorA,this.matriz.rotateX(this.rotateX))
+        triangleRotateX.vectorB = this.matriz.mutiplicacaoMatrizVetor(triangleTranslated.vectorB,this.matriz.rotateX(this.rotateX))
+        triangleRotateX.vectorC = this.matriz.mutiplicacaoMatrizVetor(triangleTranslated.vectorC,this.matriz.rotateX(this.rotateX))
 
         let triangleRotateY = new infinityTriangle(new infinityVector(0,0,0),new infinityVector(0,0,0),new infinityVector(0,0,0))
 
-        triangleRotateY.vectorA = this.matrix.mutiplicacaoMatrixVetor(triangleRotateX.vectorA,this.matrix.rotateY(this.rotateY))
-        triangleRotateY.vectorB = this.matrix.mutiplicacaoMatrixVetor(triangleRotateX.vectorB,this.matrix.rotateY(this.rotateY))
-        triangleRotateY.vectorC = this.matrix.mutiplicacaoMatrixVetor(triangleRotateX.vectorC,this.matrix.rotateY(this.rotateY))
+        triangleRotateY.vectorA = this.matriz.mutiplicacaoMatrizVetor(triangleRotateX.vectorA,this.matriz.rotateY(this.rotateY))
+        triangleRotateY.vectorB = this.matriz.mutiplicacaoMatrizVetor(triangleRotateX.vectorB,this.matriz.rotateY(this.rotateY))
+        triangleRotateY.vectorC = this.matriz.mutiplicacaoMatrizVetor(triangleRotateX.vectorC,this.matriz.rotateY(this.rotateY))
 
         let triangleRotateZ = new infinityTriangle(new infinityVector(0,0,0),new infinityVector(0,0,0),new infinityVector(0,0,0))
 
-        triangleRotateZ.vectorA = this.matrix.mutiplicacaoMatrixVetor(triangleRotateY.vectorA,this.matrix.rotateZ(this.rotateZ))
-        triangleRotateZ.vectorB = this.matrix.mutiplicacaoMatrixVetor(triangleRotateY.vectorB,this.matrix.rotateZ(this.rotateZ))
-        triangleRotateZ.vectorC = this.matrix.mutiplicacaoMatrixVetor(triangleRotateY.vectorC,this.matrix.rotateZ(this.rotateZ))
+        triangleRotateZ.vectorA = this.matriz.mutiplicacaoMatrizVetor(triangleRotateY.vectorA,this.matriz.rotateZ(this.rotateZ))
+        triangleRotateZ.vectorB = this.matriz.mutiplicacaoMatrizVetor(triangleRotateY.vectorB,this.matriz.rotateZ(this.rotateZ))
+        triangleRotateZ.vectorC = this.matriz.mutiplicacaoMatrizVetor(triangleRotateY.vectorC,this.matriz.rotateZ(this.rotateZ))
 
         let triangleScale = new infinityTriangle(new infinityVector(0,0,0),new infinityVector(0,0,0),new infinityVector(0,0,0))
         
-        triangleScale.vectorA = this.matrix.mutiplicacaoMatrixVetor(triangleRotateZ.vectorA,this.matrix.scale(80))
-        triangleScale.vectorB = this.matrix.mutiplicacaoMatrixVetor(triangleRotateZ.vectorB,this.matrix.scale(80))
-        triangleScale.vectorC = this.matrix.mutiplicacaoMatrixVetor(triangleRotateZ.vectorC,this.matrix.scale(80))
+        triangleScale.vectorA = this.matriz.mutiplicacaoMatrizVetor(triangleRotateZ.vectorA,this.matriz.scale(10))
+        triangleScale.vectorB = this.matriz.mutiplicacaoMatrizVetor(triangleRotateZ.vectorB,this.matriz.scale(10))
+        triangleScale.vectorC = this.matriz.mutiplicacaoMatrizVetor(triangleRotateZ.vectorC,this.matriz.scale(10))
           
-        // Use Cross-Product to get surface normal
+      
 			let normal = new infinityVector(0,0,0)
 			let line1 = new infinityVector(0,0,0)
 			let line2 = new infinityVector(0,0,0)
@@ -236,9 +234,9 @@ class infinityEngine{
             let triangleProjected = new infinityTriangle(new infinityVector(0,0,0),new infinityVector(0,0,0),new infinityVector(0,0,0))
        
        
-            triangleProjected.vectorA = this.matrix.mutiplicacaoMatrixVetor(triangleScale.vectorA,this.camera.matrizCamera())
-            triangleProjected.vectorB = this.matrix.mutiplicacaoMatrixVetor(triangleScale.vectorB,this.camera.matrizCamera())
-            triangleProjected.vectorC = this.matrix.mutiplicacaoMatrixVetor(triangleScale.vectorC,this.camera.matrizCamera())
+            triangleProjected.vectorA = this.matriz.mutiplicacaoMatrizVetor(triangleScale.vectorA,this.camera.matrizCamera())
+            triangleProjected.vectorB = this.matriz.mutiplicacaoMatrizVetor(triangleScale.vectorB,this.camera.matrizCamera())
+            triangleProjected.vectorC = this.matriz.mutiplicacaoMatrizVetor(triangleScale.vectorC,this.camera.matrizCamera())
         
             triangleProjected.vectorA.x/triangleProjected.vectorA.z * this.camera.zNear
             triangleProjected.vectorA.y/triangleProjected.vectorA.z * this.camera.zNear
@@ -257,8 +255,8 @@ class infinityEngine{
             triangleProjected.draw(this.canvas.context)
         
             }
-            
-        };
+        }
+        //}); 
 
             
        
