@@ -3,8 +3,8 @@ class infinityCanvas{
         this.canvas = props.canvas
         this.context = this.canvas.getContext('2d')
         this.scale = 2
-        this.canvas.width = 360 * this.scale  
-        this.canvas.height = 220 * this.scale 
+        this.canvas.width = 760 * this.scale  
+        this.canvas.height = 520 * this.scale 
         this.canvas.style.width = `${this.canvas.width}px`
         this.canvas.style.height = `${this.canvas.height}px`
         this.context.scale = this.scale

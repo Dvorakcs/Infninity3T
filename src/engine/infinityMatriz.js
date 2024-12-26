@@ -67,6 +67,13 @@ class infinityMatriz{
 
         return array;
     }
+    multiplyMatrizVetor(triangle,matriz){
+        let resultTriangle = new infinityTriangle(new infinityVector(0,0,0),new infinityVector(0,0,0),new infinityVector(0,0,0))
+        resultTriangle.vectorA = this.mutiplicacaoMatrizVetor(triangle.vectorA,matriz)
+        resultTriangle.vectorB = this.mutiplicacaoMatrizVetor(triangle.vectorB,matriz)
+        resultTriangle.vectorC = this.mutiplicacaoMatrizVetor(triangle.vectorC,matriz)
+        return resultTriangle
+    }
     mutiplicacaoMatrizVetor(vector, matriz = null){
 
         if(vector == null) return;

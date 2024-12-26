@@ -10,8 +10,8 @@ class inifnityCamera{
 
     matrizCamera(){
         const Array = [
-            [Math.tan(this.fov/2) * this.aspect,0,0,0],
-            [0,Math.tan(this.fov/2),0,0],
+            [Math.tanh(this.fov/2) * this.aspect,0,0,0],
+            [0,Math.tanh(this.fov/2),0,0],
             [0,0,this.zFar+this.zNear/this.zNear-this.zFar,2 * this.zFar * this.zNear / this.zNear - this.zFar],
             [0,0,-1,0]        
            ]
