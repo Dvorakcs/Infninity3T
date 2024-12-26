@@ -120,7 +120,7 @@ class infinityEngine{
       return triangles
     }
     start(event){
-        const filePath = 'src/obj/utah.txt'
+        const filePath = 'src/obj/axis.txt'
         fetch(filePath)
         .then(response => {
             if (!response.ok) throw new Error('Erro ao carregar o arquivo');
@@ -147,16 +147,13 @@ class infinityEngine{
         if(this.controle.keys.g) this.position.y -= 1.1
         if(this.controle.keys.h) this.position.x += 1.1
         if(this.controle.keys.f) this.position.x -= 1.1
-        if(this.controle.keys.x) this.position.z += 1.1
         if(this.controle.keys.z) {
-          //  this.position.z -= 0.1 
-           // this.position.y -= 0.1 
-            this.camera.fov += 0.01
+            
+            this.camera.fov += 1
         }
         if(this.controle.keys.x) {
-          // this.position.z  += 0.1 
-          // this.position.y  += 0.1 
-            this.camera.fov -= 0.01
+           
+            this.camera.fov -= 1
         }
        if(this.mesh == null) return
 
@@ -172,7 +169,17 @@ class infinityEngine{
         let triangleScale = this.matriz.multiplyMatrizVetor(triangleRotateZ,this.matriz.scale(10))
        
         if(infinityMath.culling(triangleScale,this.camera) < 0){
-           
+           let normal = infinityMath.multiplicationVector(infinityMath.normalize(infinityMath.productVector(
+                infinityMath.subtractionVector(triangleScale.vectorB,triangleScale.vectorA),
+                infinityMath.subtractionVector(triangleScale.vectorC,triangleScale.vectorA))
+            ),
+                infinityMath.subtractionVector(triangleScale.vectorA,this.camera.position))
+
+           let vectorLight = new infinityVector(0,0,1,1)
+           vectorLight = infinityMath.normalize(vectorLight)
+           let dp = infinityMath.multiplicationVector(normal,vectorLight)
+           dp = infinityMath.sumVector(dp)
+           //console.log(dp)
             let triangleProjected = this.matriz.multiplyMatrizVetor(triangleScale,this.camera.matrizCamera())
            
             triangleProjected.vectorA.x/triangleProjected.vectorA.z * this.camera.zNear
@@ -184,7 +191,7 @@ class infinityEngine{
         
             triangleProjected = infinityMath.ajustecenter(triangleProjected)
 
-            triangleProjected.draw(this.canvas.context)
+            triangleProjected.draw(this.canvas.context,dp)
         
             }
         }

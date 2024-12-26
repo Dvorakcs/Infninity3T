@@ -47,6 +47,14 @@ class infinityMath{
 
         return resultVector
    }
+   static divisionVector(vectorA,vectorB){
+    let resultVector = new infinityVector(0,0,0)
+    resultVector.x = vectorA.x / vectorB.x 
+    resultVector.y = vectorA.y / vectorB.y 
+    resultVector.z = vectorA.z / vectorB.z
+    resultVector.w = vectorA.w / vectorB.w
+    return resultVector 
+   }
    static multiplicationVector(vectorA,vectorB){
         let resultVector = new infinityVector(0,0,0)
         resultVector.x = vectorA.x * vectorB.x 

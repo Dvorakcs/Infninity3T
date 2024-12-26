@@ -13,27 +13,27 @@ class infinityMatriz{
         const array = [[scale,0,0,0],
                        [0,scale,0,0],
                        [0,0,scale,0],
-                       [0,0,0,1]]
+                       [0,0,0,0]]
         return array
     }
     rotateX(angle){
         const array = [[1,0,0,0],
                       [0,Math.cos(angle), -Math.sin(angle),0],
                       [0,Math.sin(angle), Math.cos(angle),0],    
-                      [0,0, 0,0]]   
+                      [0,0,0,0]]   
        return array                
     }
     rotateY(angle){
         const array = [[Math.cos(angle),0,Math.sin(angle),0],
                       [0,1,0,0],
                       [-Math.sin(angle),0, Math.cos(angle),0],    
-                      [0,0,0,1],]    
+                      [0,0,0,0],]    
        return array                
     }
     rotateZ(angle){
         const array = [[Math.cos(angle),-Math.sin(angle),0,0],
                       [Math.sin(angle),Math.cos(angle), 1,0],
-                      [0,0,0,1]]    
+                      [0,0,0,0]]    
        return array                
     }
     translacao(vector){
