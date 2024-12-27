@@ -71,6 +71,7 @@ class infinityMath{
         resultVector.w = vectorA.w * vectorB.w
         return resultVector
    }
+   
    static culling(triangle,camera){
         return infinityMath.sumVector(infinityMath.multiplicationVector(infinityMath.normalize(infinityMath.productVector(infinityMath.subtractionVector(triangle.vectorB,triangle.vectorA),infinityMath.subtractionVector(triangle.vectorC,triangle.vectorA))),infinityMath.subtractionVector(triangle.vectorA,camera.position)))
    }

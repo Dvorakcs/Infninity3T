@@ -98,7 +98,7 @@ class infinityEngine{
         
         const vertices = [];
         const triangles = [];
-
+        let infinityMeshobj = new infinityMesh()
         const lines = objString.split('\n'); // Divide o texto em linhas
 
         for (const line of lines) {
@@ -117,10 +117,16 @@ class infinityEngine{
             }
         }
 
-      return triangles
+        for (let triangleINDEX = 2; triangleINDEX < triangles.length;) {   
+            let triangle = new infinityTriangle(triangles[triangleINDEX - 2],triangles[triangleINDEX - 1],triangles[triangleINDEX])
+            triangleINDEX += 3
+            infinityMeshobj.add(triangle)
+        }
+            
+      return infinityMeshobj
     }
     start(event){
-        const filePath = 'src/obj/axis.txt'
+        const filePath = 'src/obj/utah.txt'
         fetch(filePath)
         .then(response => {
             if (!response.ok) throw new Error('Erro ao carregar o arquivo');
@@ -157,29 +163,24 @@ class infinityEngine{
         }
        if(this.mesh == null) return
 
-      //this.mesh.infinityTriangles.forEach(triangle => {
-        for (let triangleINDEX = 2; triangleINDEX < this.mesh.length;) {   
-        let triangle = new infinityTriangle(this.mesh[triangleINDEX - 2],this.mesh[triangleINDEX - 1],this.mesh[triangleINDEX])
-        triangleINDEX += 3
-
+      this.mesh.infinityTriangles.forEach(triangle => {
+       
         let triangleTranslated = this.matriz.multiplyMatrizVetor(triangle,this.matriz.translacao(new infinityVector(this.position.x,this.position.y,this.position.z)))
         let triangleRotateX = this.matriz.multiplyMatrizVetor(triangleTranslated,this.matriz.rotateX(this.rotateX))
         let triangleRotateY= this.matriz.multiplyMatrizVetor(triangleRotateX,this.matriz.rotateY(this.rotateY))
         let triangleRotateZ = this.matriz.multiplyMatrizVetor(triangleRotateY,this.matriz.rotateZ(this.rotateZ)) 
-        let triangleScale = this.matriz.multiplyMatrizVetor(triangleRotateZ,this.matriz.scale(10))
+        let triangleScale = this.matriz.multiplyMatrizVetor(triangleRotateZ,this.matriz.scale(100))
        
         if(infinityMath.culling(triangleScale,this.camera) < 0){
-           let normal = infinityMath.multiplicationVector(infinityMath.normalize(infinityMath.productVector(
-                infinityMath.subtractionVector(triangleScale.vectorB,triangleScale.vectorA),
-                infinityMath.subtractionVector(triangleScale.vectorC,triangleScale.vectorA))
-            ),
-                infinityMath.subtractionVector(triangleScale.vectorA,this.camera.position))
+           let normal = infinityMath.productVector(infinityMath.subtractionVector(triangleScale.vectorB,triangleScale.vectorA),infinityMath.subtractionVector(triangleScale.vectorC,triangleScale.vectorA))
+           
+           let vectorLight = new infinityVector(0.0,0.0,1,0)
+           let vectorLightNormal = infinityMath.normalize(vectorLight)
+           let dp = infinityMath.multiplicationVector(normal,vectorLightNormal)
 
-           let vectorLight = new infinityVector(0,0,1,1)
-           vectorLight = infinityMath.normalize(vectorLight)
-           let dp = infinityMath.multiplicationVector(normal,vectorLight)
-           dp = infinityMath.sumVector(dp)
-           //console.log(dp)
+           dp = infinityMath.sumVector(dp) 
+           
+           
             let triangleProjected = this.matriz.multiplyMatrizVetor(triangleScale,this.camera.matrizCamera())
            
             triangleProjected.vectorA.x/triangleProjected.vectorA.z * this.camera.zNear
@@ -194,8 +195,8 @@ class infinityEngine{
             triangleProjected.draw(this.canvas.context,dp)
         
             }
-        }
-        //}); 
+        
+        }); 
 
             
        

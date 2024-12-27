@@ -18,9 +18,9 @@ class infinityMatriz{
     }
     rotateX(angle){
         const array = [[1,0,0,0],
-                      [0,Math.cos(angle), -Math.sin(angle),0],
-                      [0,Math.sin(angle), Math.cos(angle),0],    
-                      [0,0,0,0]]   
+                      [0,Math.cos(angle* 0.5), Math.sin(angle* 0.5),0],
+                      [0,-Math.sin(angle* 0.5), Math.cos(angle* 0.5),0],    
+                      [0,0,0,1]]   
        return array                
     }
     rotateY(angle){

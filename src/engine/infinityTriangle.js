@@ -12,12 +12,18 @@ class infinityTriangle{
         context.lineTo(this.vectorB.x,this.vectorB.y)
         context.lineTo(this.vectorC.x,this.vectorC.y)
         context.lineTo(this.vectorA.x,this.vectorA.y)
-        
-        lum *= -1
-        context.fillStyle = 'rgba(32, 45, 21, '+ lum +')';
+       
+
+        let red = Math.round(255);
+        let green = Math.round(200); 
+        let blue = Math.round(150);
+        let alpha = lum/255;
+
+        context.fillStyle = `rgba(${red},${green},${blue},${alpha}`;
         
         context.closePath();
         context.fill();
+
     }
     
 }
