@@ -7,4 +7,7 @@ class infinityVector{
         
     }
 
+    update(){
+        
+    }
 }

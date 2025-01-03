@@ -12,85 +12,17 @@ class infinityEngine{
         this.rotateX = 0
         this.rotateY = 0
         this.rotateZ = 0
-       
+        this.luxY = 0
         this.velocityX = 0
         this.velocityY = 0
         this.velocityZ = 0
         this.position = new infinityVector(1,5,0)
+        this.trianglesProjecteToRaster = []
+        this.mesh = new infinityMesh()
         
-        this.mesh = new infinityMesh(
-            // SOUTH
-            new infinityTriangle(
-                new infinityVector(0.0, 0.0, 0.0, 0.0),
-                new infinityVector(0.0, 1.0, 0.0, 0.0),
-                new infinityVector(1.0, 1.0, 0.0, 0.0)
-            ),
-            new infinityTriangle(
-                new infinityVector(0.0, 0.0, 0.0, 0.0),
-                new infinityVector(1.0, 1.0, 0.0, 0.0),
-                new infinityVector(1.0, 0.0, 0.0, 0.0)
-            ),
-        
-            // EAST
-            new infinityTriangle(
-                new infinityVector(1.0, 0.0, 0.0, 0.0),
-                new infinityVector(1.0, 1.0, 0.0, 0.0),
-                new infinityVector(1.0, 1.0, 1.0, 0.0)
-            ),
-            new infinityTriangle(
-                new infinityVector(1.0, 0.0, 0.0, 0.0),
-                new infinityVector(1.0, 1.0, 1.0, 0.0),
-                new infinityVector(1.0, 0.0, 1.0, 0.0)
-            ),
-        
-            // NORTH
-            new infinityTriangle(
-                new infinityVector(1.0, 0.0, 1.0, 0.0),
-                new infinityVector(1.0, 1.0, 1.0, 0.0),
-                new infinityVector(0.0, 1.0, 1.0, 0.0)
-            ),
-            new infinityTriangle(
-                new infinityVector(1.0, 0.0, 1.0, 0.0),
-                new infinityVector(0.0, 1.0, 1.0, 0.0),
-                new infinityVector(0.0, 0.0, 1.0, 0.0)
-            ),
-        
-            // WEST
-            new infinityTriangle(
-                new infinityVector(0.0, 0.0, 1.0, 0.0),
-                new infinityVector(0.0, 1.0, 1.0, 0.0),
-                new infinityVector(0.0, 1.0, 0.0, 0.0)
-            ),
-            new infinityTriangle(
-                new infinityVector(0.0, 0.0, 1.0, 0.0),
-                new infinityVector(0.0, 1.0, 0.0, 0.0),
-                new infinityVector(0.0, 0.0, 0.0, 0.0)
-            ),
-        
-            // TOP
-            new infinityTriangle(
-                new infinityVector(0.0, 1.0, 0.0, 0.0),
-                new infinityVector(0.0, 1.0, 1.0, 0.0),
-                new infinityVector(1.0, 1.0, 1.0, 0.0)
-            ),
-            new infinityTriangle(
-                new infinityVector(0.0, 1.0, 0.0, 0.0),
-                new infinityVector(1.0, 1.0, 1.0, 0.0),
-                new infinityVector(1.0, 1.0, 0.0, 0.0)
-            ),
-        
-            // BOTTOM
-            new infinityTriangle(
-                new infinityVector(1.0, 0.0, 1.0, 0.0),
-                new infinityVector(0.0, 0.0, 1.0, 0.0),
-                new infinityVector(0.0, 0.0, 0.0, 0.0)
-            ),
-            new infinityTriangle(
-                new infinityVector(1.0, 0.0, 1.0, 0.0),
-                new infinityVector(0.0, 0.0, 0.0, 0.0),
-                new infinityVector(1.0, 0.0, 0.0, 0.0)
-            )
-        );
+        this.mesh.addRange(new cube(new infinityVector(10,10,1), new infinityVector(5,5,5,0)).mesh)
+        this.player = new Player(new infinityVector(0,0,0))
+        //this.mesh.addRange(this.player.mesh)
         this.array = [0,0,0]
         
     }
@@ -133,8 +65,11 @@ class infinityEngine{
             return response.text();
         })
         .then(data => {
-            
-           this.mesh = this.parseObjToInfinityMesh(data);
+          let mesh =  this.parseObjToInfinityMesh(data)
+          mesh.infinityTriangles.forEach(triangle => {
+           this.mesh.add(triangle);
+         })
+           
            
            this.update(event)
         })
@@ -143,43 +78,49 @@ class infinityEngine{
     }
     update(event){
       this.canvas.context.clearRect(0,0,1520,1040)
-        if(this.controle.keys.w) this.rotateY += 0.01
-        if(this.controle.keys.s) this.rotateY -= 0.01
-        if(this.controle.keys.d) this.rotateX += 0.01
-        if(this.controle.keys.a) this.rotateX -= 0.01
-        if(this.controle.keys.e) this.rotateZ += 0.01
-        if(this.controle.keys.q) this.rotateZ -= 0.01
-        if(this.controle.keys.t) this.position.y += 1.1
-        if(this.controle.keys.g) this.position.y -= 1.1
-        if(this.controle.keys.h) this.position.x += 1.1
-        if(this.controle.keys.f) this.position.x -= 1.1
+      
+      this.trianglesProjecteToRaster = []
+        if(this.controle.keys.w) this.camera.rotation.y += 0.01
+        if(this.controle.keys.s) this.camera.rotation.y -= 0.01
+        if(this.controle.keys.d) this.camera.rotation.x += 0.01
+        if(this.controle.keys.a) this.camera.rotation.x -= 0.01
+        if(this.controle.keys.e) this.camera.rotation.z += 0.01
+        if(this.controle.keys.q) this.camera.rotation.z -= 0.01
+        if(this.controle.keys.t) this.camera.position.y += 1.1
+        if(this.controle.keys.g) this.camera.position.y -= 1.1
+        if(this.controle.keys.h) this.camera.position.x += 1.1
+        if(this.controle.keys.f) this.camera.position.x -= 1.1
         if(this.controle.keys.z) {
-            
-            this.camera.fov += 1
+            debugger
+           this.camera.position.z += 0.01
         }
         if(this.controle.keys.x) {
-           
-            this.camera.fov -= 1
+            
+            this.camera.position.z -= 0.01
+        }
+        if(this.controle.keys.v) {
+            
+            this.player.atirar()
         }
        if(this.mesh == null) return
 
       this.mesh.infinityTriangles.forEach(triangle => {
        
-        let triangleTranslated = this.matriz.multiplyMatrizVetor(triangle,this.matriz.translacao(new infinityVector(this.position.x,this.position.y,this.position.z)))
-        let triangleRotateX = this.matriz.multiplyMatrizVetor(triangleTranslated,this.matriz.rotateX(this.rotateX))
-        let triangleRotateY= this.matriz.multiplyMatrizVetor(triangleRotateX,this.matriz.rotateY(this.rotateY))
-        let triangleRotateZ = this.matriz.multiplyMatrizVetor(triangleRotateY,this.matriz.rotateZ(this.rotateZ)) 
-        let triangleScale = this.matriz.multiplyMatrizVetor(triangleRotateZ,this.matriz.scale(100))
+        let triangleTranslated = this.matriz.multiplyMatrizVetor(triangle,this.matriz.translacao(new infinityVector(this.camera.position.x,this.camera.position.y,this.camera.position.z)))
+        let triangleRotateX = this.matriz.multiplyMatrizVetor(triangleTranslated,this.matriz.rotateX(this.camera.rotation.x))
+        let triangleRotateY= this.matriz.multiplyMatrizVetor(triangleRotateX,this.matriz.rotateY(this.camera.rotation.y))
+        let triangleRotateZ = this.matriz.multiplyMatrizVetor(triangleRotateY,this.matriz.rotateZ(this.camera.rotation.z)) 
+        let triangleScale = this.matriz.multiplyMatrizVetor(triangleRotateZ,this.matriz.scale(this.camera.position.z))
        
-        if(infinityMath.culling(triangleScale,this.camera) < 0){
+        if(infinityMath.culling(triangleScale,this.camera) > 0){
            let normal = infinityMath.productVector(infinityMath.subtractionVector(triangleScale.vectorB,triangleScale.vectorA),infinityMath.subtractionVector(triangleScale.vectorC,triangleScale.vectorA))
            
-           let vectorLight = new infinityVector(0.0,0.0,1,0)
+           let vectorLight = new infinityVector(0,0,-1,0)
            let vectorLightNormal = infinityMath.normalize(vectorLight)
            let dp = infinityMath.multiplicationVector(normal,vectorLightNormal)
 
            dp = infinityMath.sumVector(dp) 
-           
+           dp /= 1000
            
             let triangleProjected = this.matriz.multiplyMatrizVetor(triangleScale,this.camera.matrizCamera())
            
@@ -191,15 +132,28 @@ class infinityEngine{
             triangleProjected.vectorC.y/triangleProjected.vectorC.z * this.camera.zNear
         
             triangleProjected = infinityMath.ajustecenter(triangleProjected)
-
-            triangleProjected.draw(this.canvas.context,dp)
-        
+            triangleProjected.alpha = dp
+            
+            this.trianglesProjecteToRaster.push(triangleProjected)
             }
         
         }); 
 
             
-       
+        this.trianglesProjecteToRaster.sort((t1,t2) => {
+
+        const z1 = (t1.vectorA.z + t1.vectorB.z + t1.vectorC.z) / 3; 
+        const z2 = (t2.vectorA.z + t2.vectorB.z + t2.vectorC.z) / 3; 
+        return z2 - z1; 
+
+        });
+
+        this.trianglesProjecteToRaster.forEach(triangle => {
+            
+            triangle.draw(this.canvas.context)
+            
+        })
+      //  this.player.update()
        requestAnimationFrame(() => this.update(event))
     }
     
