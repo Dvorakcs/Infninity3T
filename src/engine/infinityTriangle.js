@@ -19,25 +19,12 @@ class infinityTriangle{
     }
     draw(context){
 
-        const ABx = this.vectorB.x - this.vectorA.x;
-        const ABy = this.vectorB.y - this.vectorA.y;
-        const ACx = this.vectorC.x - this.vectorA.x;
-        const ACy = this.vectorC.y - this.vectorA.y;
-        context.save()
-        context.transform(ABx/10, ABy/10,
-                          ACx/10, ACy/10,
-                          this.vectorA.x,this.vectorA.y  
-        )
-        context.drawImage(this.image,0,0)
-
-        context.restore();
+        context.beginPath();
+        context.moveTo(this.vectorA.x, this.vectorA.y);
+        context.lineTo(this.vectorB.x, this.vectorB.y);
+        context.lineTo(this.vectorC.x, this.vectorC.y);
         context.closePath();
-        context.beginPath()
-        context.moveTo(this.vectorA.x,this.vectorA.y)
-        context.lineTo(this.vectorB.x,this.vectorB.y)
-        context.lineTo(this.vectorC.x,this.vectorC.y)
-        context.lineTo(this.vectorA.x,this.vectorA.y)
-       
+
         
 
         let red = Math.round(255 * this.alpha/4);
@@ -45,9 +32,8 @@ class infinityTriangle{
         let blue = Math.round(150* this.alpha/4);
 
         context.fillStyle = `rgba(${red},${green},${blue},${this.alpha/4}`;
+        context.fill()
         
-        context.closePath();
-        context.fill();
 
     }
     

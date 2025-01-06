@@ -16,7 +16,7 @@ class infinityMath{
     
     static normalize(vector){
 
-        let l = Math.sqrt(vector.x*vector.x + vector.y*vector.y + vector.z*vector.z);
+        let l = Math.sqrt(vector.x*vector.x + vector.y*vector.y + vector.z*vector.z + vector.w * vector.w);
 
 		vector.x /= l; 
         vector.y /= l; 
@@ -25,7 +25,7 @@ class infinityMath{
         return vector
     }
     static sumVector(vector){
-        return vector.x + vector.y + vector.z
+        return vector.x + vector.y + vector.z 
     }
     static additionVector(vectorA,vectorB){
          let resultVector = new infinityVector(0,0,0)
@@ -56,7 +56,7 @@ class infinityMath{
     return resultVector 
    }
    static multiplicationVector(vectorA,vectorB){
-        let resultVector = new infinityVector(0,0,0)
+        let resultVector = new infinityVector(0,0,0,0)
         resultVector.x = vectorA.x * vectorB.x 
         resultVector.y = vectorA.y * vectorB.y 
         resultVector.z = vectorA.z * vectorB.z
@@ -71,7 +71,7 @@ class infinityMath{
         resultVector.w = vectorA.w * vectorB.w
         return resultVector
    }
-   
+
    static culling(triangle,camera){
         return infinityMath.sumVector(infinityMath.multiplicationVector(infinityMath.normalize(infinityMath.productVector(infinityMath.subtractionVector(triangle.vectorB,triangle.vectorA),infinityMath.subtractionVector(triangle.vectorC,triangle.vectorA))),infinityMath.subtractionVector(triangle.vectorA,camera.position)))
    }

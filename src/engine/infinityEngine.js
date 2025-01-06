@@ -20,7 +20,7 @@ class infinityEngine{
         this.trianglesProjecteToRaster = []
         this.mesh = new infinityMesh()
         
-        this.mesh.addRange(new cube(new infinityVector(10,10,1), new infinityVector(5,5,5,0)).mesh)
+        //this.mesh.addRange(new cube(new infinityVector(10,10,1), new infinityVector(5,5,5,0)).mesh)
         this.player = new Player(new infinityVector(0,0,0))
         //this.mesh.addRange(this.player.mesh)
         this.array = [0,0,0]
@@ -58,7 +58,7 @@ class infinityEngine{
       return infinityMeshobj
     }
     start(event){
-        const filePath = 'src/obj/utah.txt'
+        const filePath = 'src/obj/videoship.txt'
         fetch(filePath)
         .then(response => {
             if (!response.ok) throw new Error('Erro ao carregar o arquivo');
@@ -107,15 +107,15 @@ class infinityEngine{
       this.mesh.infinityTriangles.forEach(triangle => {
        
         let triangleTranslated = this.matriz.multiplyMatrizVetor(triangle,this.matriz.translacao(new infinityVector(this.camera.position.x,this.camera.position.y,this.camera.position.z)))
-        let triangleRotateX = this.matriz.multiplyMatrizVetor(triangleTranslated,this.matriz.rotateX(this.camera.rotation.x))
+        let triangleRotateZ = this.matriz.multiplyMatrizVetor(triangleTranslated,this.matriz.rotateZ(this.camera.rotation.z)) 
+        let triangleRotateX = this.matriz.multiplyMatrizVetor(triangleRotateZ,this.matriz.rotateX(this.camera.rotation.x))
         let triangleRotateY= this.matriz.multiplyMatrizVetor(triangleRotateX,this.matriz.rotateY(this.camera.rotation.y))
-        let triangleRotateZ = this.matriz.multiplyMatrizVetor(triangleRotateY,this.matriz.rotateZ(this.camera.rotation.z)) 
-        let triangleScale = this.matriz.multiplyMatrizVetor(triangleRotateZ,this.matriz.scale(this.camera.position.z))
+        let triangleScale = this.matriz.multiplyMatrizVetor(triangleRotateY,this.matriz.scale(this.camera.position.z))
        
-        if(infinityMath.culling(triangleScale,this.camera) > 0){
+        if(infinityMath.culling(triangleScale,this.camera) < 0){
            let normal = infinityMath.productVector(infinityMath.subtractionVector(triangleScale.vectorB,triangleScale.vectorA),infinityMath.subtractionVector(triangleScale.vectorC,triangleScale.vectorA))
            
-           let vectorLight = new infinityVector(0,0,-1,0)
+           let vectorLight = new infinityVector(1,1,1,1)
            let vectorLightNormal = infinityMath.normalize(vectorLight)
            let dp = infinityMath.multiplicationVector(normal,vectorLightNormal)
 
